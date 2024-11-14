@@ -10,6 +10,8 @@
   export let toDate = null;
   
   let daysBackInput = '';
+  let fromCalendarValue = null;
+  let toCalendarValue = null;
   const dispatch = createEventDispatcher();
 
   function handleDaysBackSubmit() {
@@ -21,17 +23,34 @@
     fromDate = new Date(today);
     fromDate.setDate(today.getDate() - days);
     
+    dispatchDateChange();
+  }
+
+  function calendarToDate(calendarValue) {
+    if (!calendarValue) return null;
+    return new Date(calendarValue.year, calendarValue.month - 1, calendarValue.day);
+  }
+
+  function dispatchDateChange() {
     dispatch('filterChange', { fromDate, toDate });
   }
 
-  function handleDateChange(date, isFromDate) {
-    if (isFromDate) {
-      fromDate = date;
-    } else {
-      toDate = date;
+  function handleFromDateChange() {
+    if (fromCalendarValue) {
+      fromDate = calendarToDate(fromCalendarValue);
+      dispatchDateChange();
     }
-    dispatch('filterChange', { fromDate, toDate });
   }
+
+  function handleToDateChange() {
+    if (toCalendarValue) {
+      toDate = calendarToDate(toCalendarValue);
+      dispatchDateChange();
+    }
+  }
+
+  $: fromCalendarValue && handleFromDateChange();
+  $: toCalendarValue && handleToDateChange();
 
   function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -68,7 +87,7 @@
           </Button>
         </PopoverTrigger>
         <PopoverContent class="w-auto p-0">
-          <Calendar selected={fromDate} onSelect={(date) => handleDateChange(date, true)} />
+          <Calendar bind:value={fromCalendarValue} />
         </PopoverContent>
       </Popover>
     </div>
@@ -82,7 +101,7 @@
           </Button>
         </PopoverTrigger>
         <PopoverContent class="w-auto p-0">
-          <Calendar selected={toDate} onSelect={(date) => handleDateChange(date, false)} />
+          <Calendar bind:value={toCalendarValue} />
         </PopoverContent>
       </Popover>
     </div>
