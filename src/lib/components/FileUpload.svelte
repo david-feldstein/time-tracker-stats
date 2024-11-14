@@ -22,6 +22,6 @@
 </script>
 
 <div class="space-y-2">
-  <h1 class="text-3xl font-bold">Domain Time Tracker</h1>
+  <h1 class="text-3xl font-bold">Time Tracker Stats</h1>
   <Input type="file" accept=".json" on:change={handleFileUpload} />
 </div>

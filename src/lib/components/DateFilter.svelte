@@ -32,15 +32,38 @@
     }
     dispatch('filterChange', { fromDate, toDate });
   }
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          dispatch('dataLoaded', { data });
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+      };
+      reader.readAsText(file);
+    }
+  }
 </script>
 
-<div class="space-y-6">
-  <div class="flex gap-4">
-    <div class="flex-1 space-y-2">
-      <label class="text-sm">From Date</label>
+<div class="bg-card rounded-lg shadow p-6 space-y-6">
+  <h1 class="text-3xl font-bold mb-6">Time Tracker Stats</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+    <div>
+      <label class="text-sm block mb-2">Upload JSON</label>
+      <Input type="file" accept=".json" on:change={handleFileUpload} />
+    </div>
+
+    <div>
+      <label class="text-sm block mb-2">From Date</label>
       <Popover>
         <PopoverTrigger>
-          <Button variant="outline">
+          <Button variant="outline" class="w-full justify-start">
             {fromDate ? format(fromDate, 'PPP') : 'Pick a date'}
           </Button>
         </PopoverTrigger>
@@ -50,11 +73,11 @@
       </Popover>
     </div>
 
-    <div class="flex-1 space-y-2">
-      <label class="text-sm">To Date</label>
+    <div>
+      <label class="text-sm block mb-2">To Date</label>
       <Popover>
         <PopoverTrigger>
-          <Button variant="outline">
+          <Button variant="outline" class="w-full justify-start">
             {toDate ? format(toDate, 'PPP') : 'Pick a date'}
           </Button>
         </PopoverTrigger>
@@ -63,13 +86,13 @@
         </PopoverContent>
       </Popover>
     </div>
-  </div>
 
-  <div class="flex gap-4 items-end">
-    <div class="flex-1">
-      <label class="text-sm block mb-2">Days Back</label>
-      <Input type="number" bind:value={daysBackInput} placeholder="Enter number of days" />
+    <div class="flex gap-2">
+      <div class="flex-1">
+        <label class="text-sm block mb-2">Days Back</label>
+        <Input type="number" bind:value={daysBackInput} placeholder="Days" />
+      </div>
+      <Button class="self-end" on:click={handleDaysBackSubmit}>Filter</Button>
     </div>
-    <Button on:click={handleDaysBackSubmit}>Filter</Button>
   </div>
 </div>

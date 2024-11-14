@@ -26,13 +26,13 @@
   }
 </script>
 
-<main class="container mx-auto p-4 max-w-4xl">
+<main class="container mx-auto p-4 max-w-6xl dark">
   <div class="space-y-6">
-    <FileUpload on:dataLoaded={handleDataLoaded} />
     <DateFilter 
       bind:fromDate 
       bind:toDate 
-      on:filterChange={handleFilterChange} 
+      on:filterChange={handleFilterChange}
+      on:dataLoaded={handleDataLoaded}
     />
     <DataDisplay data={filteredData} />
   </div>
@@ -40,6 +40,6 @@
 
 <style>
   :global(body) {
-    background-color: #f5f5f5;
+    @apply bg-background text-foreground;
   }
 </style>

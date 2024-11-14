@@ -19,12 +19,7 @@
 
     const top10Data = data.slice(0, 10);
     const labels = top10Data.map(item => item.domain);
-
-    // Calculate the total of `totalTimeSeconds` for the top 10 items
-    const totalSeconds = top10Data.reduce((sum, item) => sum + item.totalTimeSeconds, 0);
-
-    // Map each `totalTimeSeconds` value to a percentage
-    const values = top10Data.map(item => ((item.totalTimeSeconds / totalSeconds) * 100).toFixed(2));
+    const values = top10Data.map(item => item.totalTimeSeconds);
 
     chart = new Chart(ctx, {
       type: 'pie',
@@ -42,17 +37,11 @@
         responsive: true,
         plugins: {
           legend: {
-            position: 'right'
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.raw || 0;
-                return `${value}%`; // Add the % suffix here
-              }
+            position: 'right',
+            labels: {
+              color: 'rgb(255, 255, 255)'
             }
-          },
+          }
         }
       }
     });
@@ -67,11 +56,11 @@
 
 {#if data.length > 0}
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-card p-4 rounded-lg shadow">
       <canvas id="pieChart"></canvas>
     </div>
     
-    <div class="bg-white p-4 rounded-lg shadow overflow-x-auto">
+    <div class="bg-card p-4 rounded-lg shadow overflow-x-auto">
       <table class="min-w-full">
         <thead>
           <tr>
@@ -82,7 +71,7 @@
         </thead>
         <tbody>
           {#each data as item}
-            <tr>
+            <tr class="border-t border-border">
               <td class="p-2">{item.domain}</td>
               <td class="p-2">{item.totalTime}</td>
               <td class="p-2">{item.average}</td>
