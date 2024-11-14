@@ -19,7 +19,12 @@
 
     const top10Data = data.slice(0, 10);
     const labels = top10Data.map(item => item.domain);
-    const values = top10Data.map(item => item.totalTimeSeconds);
+
+    // Calculate the total of `totalTimeSeconds` for the top 10 items
+    const totalSeconds = top10Data.reduce((sum, item) => sum + item.totalTimeSeconds, 0);
+
+    // Map each `totalTimeSeconds` value to a percentage
+    const values = top10Data.map(item => ((item.totalTimeSeconds / totalSeconds) * 100).toFixed(2));
 
     chart = new Chart(ctx, {
       type: 'pie',
@@ -38,7 +43,16 @@
         plugins: {
           legend: {
             position: 'right'
-          }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                return `${value}%`; // Add the % suffix here
+              }
+            }
+          },
         }
       }
     });
